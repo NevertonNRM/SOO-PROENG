@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SOO/PROENG</title>
+    <link rel="stylesheet" href="/static/app.css">
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <strong>SOO/PROENG</strong>
+        <span>Sistema de orcamento</span>
+      </div>
+      <nav>
+        <button class="nav active" data-view="services">Servicos</button>
+        <button class="nav" data-view="inputs">Insumos</button>
+        <button class="nav" data-view="taxes">Taxas</button>
+        <button class="nav" data-view="projects">Obras</button>
+        <button class="nav" data-view="bases">Bases</button>
+        <button class="nav" data-view="equivalences">Equivalencias</button>
+      </nav>
+      <button id="reimport" class="ghost">Reimportar DBFs</button>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <h1>Base de composicoes</h1>
+          <p id="status">Carregando...</p>
+        </div>
+        <div class="stats">
+          <div><span id="statInputs">-</span><small>Insumos</small></div>
+          <div><span id="statServices">-</span><small>Servicos</small></div>
+          <div><span id="statProjects">-</span><small>Obras</small></div>
+          <div><span id="statUnified">-</span><small>Catalogo</small></div>
+        </div>
+      </header>
+
+      <section id="view-services" class="view active">
+        <div class="toolbar">
+          <input id="serviceSearch" type="search" placeholder="Buscar servico por codigo, item, nome ou acesso">
+          <button id="serviceSearchBtn">Buscar</button>
+        </div>
+        <div class="split">
+          <section class="panel">
+            <div class="panel-title">Servicos</div>
+            <div id="serviceList" class="list"></div>
+          </section>
+          <section class="panel detail">
+            <div id="serviceDetail" class="empty">Selecione um servico.</div>
+          </section>
+        </div>
+      </section>
+
+      <section id="view-inputs" class="view">
+        <div class="toolbar">
+          <input id="inputSearch" type="search" placeholder="Buscar insumo por codigo, nome ou acesso">
+          <button id="inputSearchBtn">Buscar</button>
+        </div>
+        <section class="panel">
+          <div class="panel-title">Insumos</div>
+          <div id="inputList" class="table"></div>
+        </section>
+      </section>
+
+      <section id="view-taxes" class="view">
+        <section class="panel">
+          <div class="panel-title">Taxas</div>
+          <div id="taxList" class="table"></div>
+        </section>
+      </section>
+
+      <section id="view-projects" class="view">
+        <div class="toolbar">
+          <input id="newWorkName" type="text" placeholder="Nome da nova obra">
+          <input id="newWorkClient" type="text" placeholder="Cliente">
+          <label class="field-label" for="activeUf">UF da obra</label>
+          <select id="activeUf">
+            <option value="SC">SC</option>
+            <option value="AC">AC</option>
+            <option value="AL">AL</option>
+            <option value="AM">AM</option>
+            <option value="AP">AP</option>
+            <option value="BA">BA</option>
+            <option value="CE">CE</option>
+            <option value="DF">DF</option>
+            <option value="ES">ES</option>
+            <option value="GO">GO</option>
+            <option value="MA">MA</option>
+            <option value="MG">MG</option>
+            <option value="MS">MS</option>
+            <option value="MT">MT</option>
+            <option value="PA">PA</option>
+            <option value="PB">PB</option>
+            <option value="PE">PE</option>
+            <option value="PI">PI</option>
+            <option value="PR">PR</option>
+            <option value="RJ">RJ</option>
+            <option value="RN">RN</option>
+            <option value="RO">RO</option>
+            <option value="RR">RR</option>
+            <option value="RS">RS</option>
+            <option value="SE">SE</option>
+            <option value="SP">SP</option>
+            <option value="TO">TO</option>
+          </select>
+          <button id="createWorkBtn">Criar obra</button>
+        </div>
+        <section class="panel">
+          <div class="panel-title">Obra ativa</div>
+          <div id="activeWork" class="empty">Nenhuma obra ativa.</div>
+          <div id="workItems" class="table"></div>
+        </section>
+        <section class="panel">
+          <div class="panel-title">Obras legadas encontradas</div>
+          <div id="projectList" class="table"></div>
+        </section>
+      </section>
+
+      <section id="view-bases" class="view">
+        <div class="toolbar">
+          <select id="sourceFilter"></select>
+          <select id="kindFilter">
+            <option value="">Todos</option>
+            <option value="COMPOSICAO">Composicoes</option>
+            <option value="INSUMO">Insumos</option>
+          </select>
+          <span id="activeUfBadge" class="badge">UF da obra: SC</span>
+          <input id="unifiedSearch" type="search" placeholder="Buscar no catalogo unificado">
+          <button id="unifiedSearchBtn">Buscar</button>
+        </div>
+        <div class="split">
+          <section class="panel">
+            <div class="panel-title">Bases e catalogo</div>
+            <div id="sourceList" class="table"></div>
+            <div id="unifiedList" class="list"></div>
+          </section>
+          <section class="panel detail">
+            <div id="unifiedDetail" class="empty">Selecione um item do catalogo.</div>
+            <div class="toolbar detail-actions">
+              <input id="addQuantity" type="number" min="0" step="0.01" value="1">
+              <button id="addToWorkBtn">Adicionar na obra</button>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="view-equivalences" class="view">
+        <div class="toolbar">
+          <select id="equivStatus">
+            <option value="">Todos os status</option>
+            <option value="suggested">Sugeridas</option>
+            <option value="pending">Pendentes</option>
+            <option value="approved">Aprovadas</option>
+            <option value="rejected">Rejeitadas</option>
+          </select>
+          <input id="equivSearch" type="search" placeholder="Buscar insumo antigo ou SINAPI">
+          <button id="equivSearchBtn">Buscar</button>
+        </div>
+        <section class="panel">
+          <div class="panel-title">Equivalencias de insumos SOO -> SINAPI</div>
+          <div id="equivSummary" class="empty"></div>
+          <div id="equivList" class="table"></div>
+        </section>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
